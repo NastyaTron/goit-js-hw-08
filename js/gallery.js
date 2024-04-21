@@ -67,20 +67,40 @@ const images = [
 const itemEl = document.querySelector('.gallery');
 itemEl.classList.add('gallery-list');
 
-const imagesEl = images.map(({ preview, description, original }) => {
-  const navItemEl = document.createElement('li');
-  navItemEl.classList.add('gallery-item');
-  const linkEl = document.createElement('a');
-  linkEl.classList.add('gallery-link');
-  linkEl.setAttribute('href', original);
-  const imgEl = document.createElement('img');
-  imgEl.classList.add('gallery-image');
-  imgEl.setAttribute('src', preview);
-  imgEl.setAttribute('alt', description);
-  imgEl.dataset.src = original;
-  navItemEl.append(imgEl);
-  return navItemEl;
-});
-itemEl.append(...imagesEl);
+const imagesEl = images
+  .map(({ preview, description, original }) => {
+    return `<li class="gallery-item">
+      <a class="gallery-link" href="large-image.jpg">
+        <img
+          class="gallery-image"
+          src=${preview}
+          data-source=${original}
+          alt=${description}
+        />
+      </a>
+    </li>`;
+  })
+  .join('');
 
-console.log(imagesEl);
+itemEl.innerHTML = imagesEl;
+
+const linksEl = document.querySelectorAll('a');
+
+linksEl.forEach(link => link.addEventListener('click', download));
+function download(event) {
+  event.preventDefault();
+}
+linksEl.forEach(link => {
+  const source = link.getAttribute('data-source');
+  link.setAttribute('href', source);
+});
+
+itemEl.addEventListener('click', event => {
+  if (!event.target.dataset.source) {
+    return;
+  }
+  const instance = basicLightbox.create(`
+    <img src=${event.target.dataset.source}>
+`);
+  instance.show();
+});
