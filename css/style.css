@@ -3,8 +3,6 @@
   max-width: 100%;
   height: auto;
   object-fit: cover;
-  width: 510px;
-  height: 340px;
 }
 .gallery-list {
   list-style-type: none;
