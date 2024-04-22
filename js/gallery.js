@@ -70,12 +70,12 @@ itemEl.classList.add('gallery-list');
 const imagesEl = images
   .map(({ preview, description, original }) => {
     return `<li class="gallery-item">
-      <a class="gallery-link" href="large-image.jpg">
+      <a class="gallery-link" href="${original}">
         <img
           class="gallery-image"
-          src=${preview}
-          data-source=${original}
-          alt=${description}
+          src="${preview}"
+          data-source="${original}"
+          alt="${description}"
         />
       </a>
     </li>`;
@@ -90,17 +90,12 @@ linksEl.forEach(link => link.addEventListener('click', download));
 function download(event) {
   event.preventDefault();
 }
-linksEl.forEach(link => {
-  const source = link.getAttribute('data-source');
-  link.setAttribute('href', source);
-});
 
 itemEl.addEventListener('click', event => {
-  if (!event.target.dataset.source) {
-    return;
-  }
-  const instance = basicLightbox.create(`
+  if (event.target.nodeName === 'IMG') {
+    const instance = basicLightbox.create(`
     <img src=${event.target.dataset.source}>
 `);
-  instance.show();
+    instance.show();
+  }
 });
